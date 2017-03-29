@@ -1,0 +1,11 @@
+﻿Build started 30/07/2015 09:50:50.
+     1>Project "C:\X-Team Studio\SOURCE\Client_EX603\Client\Client.vcxproj" on node 2 (ClCompile target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D CLIENT_EXPORTS /D _WINDLL /D _MBCS /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"Debug\Client.pch" /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ChatWindow.cpp
+         Skipping... (no relevant changes detected)
+         ChatWindow.cpp
+     1>Done Building Project "C:\X-Team Studio\SOURCE\Client_EX603\Client\Client.vcxproj" (ClCompile target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.15

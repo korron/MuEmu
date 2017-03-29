@@ -1,0 +1,3 @@
+#pragma once
+
+typedef void (WINAPI*KERNELGETSTARTUPINFO)(LPSTARTUPINFO);

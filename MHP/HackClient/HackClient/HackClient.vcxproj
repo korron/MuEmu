@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{679A05FF-3E37-42B2-AACE-7382B1D25AE1}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>HackClient</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>MHPClient</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>MHPClient</TargetName>
+    <IncludePath>C:\Program Files %28x86%29\Microsoft Research\Detours Express 3.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\Microsoft Research\Detours Express 3.0\lib.X86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;HACKCLIENT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;HACKCLIENT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+      <GenerateMapFile>true</GenerateMapFile>
+      <UACUIAccess>false</UACUIAccess>
+      <EnableUAC>true</EnableUAC>
+      <AdditionalDependencies>detours.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+    <None Include="SplashScreen\CloseSplash.bmp" />
+    <None Include="SplashScreen\InitSplash.bmp" />
+    <None Include="SplashScreen\WarningSplash.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CCRC32.h" />
+    <ClInclude Include="Connection.h" />
+    <ClInclude Include="CriticalSection.h" />
+    <ClInclude Include="FileCheck.h" />
+    <ClInclude Include="FileMappingCheck.h" />
+    <ClInclude Include="FileProtect.h" />
+    <ClInclude Include="LibraryCheck.h" />
+    <ClInclude Include="HackCheck.h" />
+    <ClInclude Include="HackClient.h" />
+    <ClInclude Include="HackServerProtocol.h" />
+    <ClInclude Include="ListManager.h" />
+    <ClInclude Include="DumpCheck.h" />
+    <ClInclude Include="ExecutableCheck.h" />
+    <ClInclude Include="Log.h" />
+    <ClInclude Include="MacroCheck.h" />
+    <ClInclude Include="Message.h" />
+    <ClInclude Include="ProcessCheck.h" />
+    <ClInclude Include="ProcessManager.h" />
+    <ClInclude Include="ProcessQuery.h" />
+    <ClInclude Include="Protect.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="SimpleModules.h" />
+    <ClInclude Include="SplashScreen.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="ThreadCheck.h" />
+    <ClInclude Include="Util.h" />
+    <ClInclude Include="RegistryCheck.h" />
+    <ClInclude Include="WindowCheck.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CCRC32.cpp" />
+    <ClCompile Include="Connection.cpp" />
+    <ClCompile Include="CriticalSection.cpp" />
+    <ClCompile Include="FileCheck.cpp" />
+    <ClCompile Include="FileMappingCheck.cpp" />
+    <ClCompile Include="FileProtect.cpp" />
+    <ClCompile Include="HackServerProtocol.cpp" />
+    <ClCompile Include="LibraryCheck.cpp" />
+    <ClCompile Include="HackCheck.cpp" />
+    <ClCompile Include="HackClient.cpp" />
+    <ClCompile Include="ListManager.cpp" />
+    <ClCompile Include="DumpCheck.cpp" />
+    <ClCompile Include="ExecutableCheck.cpp" />
+    <ClCompile Include="Log.cpp" />
+    <ClCompile Include="MacroCheck.cpp" />
+    <ClCompile Include="Message.cpp" />
+    <ClCompile Include="ProcessCheck.cpp" />
+    <ClCompile Include="ProcessManager.cpp" />
+    <ClCompile Include="ProcessQuery.cpp" />
+    <ClCompile Include="Protect.cpp" />
+    <ClCompile Include="SimpleModules.cpp" />
+    <ClCompile Include="SplashScreen.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="ThreadCheck.cpp" />
+    <ClCompile Include="Util.cpp" />
+    <ClCompile Include="RegistryCheck.cpp" />
+    <ClCompile Include="WindowCheck.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="HackClient1.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

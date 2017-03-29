@@ -1,0 +1,16 @@
+#pragma once
+
+#define MAIN_CONNECTION_STATUS 0x07FE8E38
+#define MAIN_SCREEN_STATE 0x00853434
+#define MAIN_CHARACTER_STRUCT 0x079FAE60
+#define MAIN_VIEWPORT_STRUCT 0x079B9D48
+#define MAIN_PACKET_SERIAL 0x07FE8E33
+#define MAIN_FONT_SIZE 0x079FAE78
+#define MAIN_RESOLUTION 0x07FE0520
+#define MAIN_RESOLUTION_X 0x00852B98
+#define MAIN_RESOLUTION_Y 0x00852B9C
+#define MAIN_PARTY_MEMBER_COUNT 0x07B55338
+
+#define ProtocolCore ((BOOL(*)(DWORD,BYTE*,DWORD,DWORD))0x0062C170)
+#define DrawInterface ((void(*)(DWORD,float,float,float,float))0x006E26E3)
+#define DrawInterfaceText ((void(*)(char*,int,int,int,int,int,int,int))0x0070EF47)
