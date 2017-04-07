@@ -4,7 +4,7 @@
 
 #define _WIN32_WINNT _WIN32_WINNT_WINXP
 
-#define GAMESERVER_VERSION "PREMIUM"
+#define GAMESERVER_VERSION "FREE"
 
 #ifndef GAMESERVER_TYPE
 #define GAMESERVER_TYPE 0
@@ -23,11 +23,11 @@
 #endif
 
 #ifndef PROTECT_STATE
-#define PROTECT_STATE 1
+#define PROTECT_STATE 0
 #endif
 
 #ifndef ENCRYPT_STATE
-#define ENCRYPT_STATE 1
+#define ENCRYPT_STATE 0
 #endif
 
 // System Include

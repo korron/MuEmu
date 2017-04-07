@@ -96,7 +96,13 @@ void GJConnectAccountRecv(SDHP_CONNECT_ACCOUNT_RECV* lpMsg,int index) // OK
 		return;
 	}
 
-	if(gAccountManager.GetAccountCount() >= gJoinServerMaxAccount[gProtect.m_AuthInfo.PackageType][gProtect.m_AuthInfo.PlanType])
+	if (gAccountManager.GetAccountCount() >=
+#if    PROTECT_STATE
+		gJoinServerMaxAccount[gProtect.m_AuthInfo.PackageType][gProtect.m_AuthInfo.PlanType]
+#else
+		MAX_ACCOUNT
+#endif
+		)
 	{
 		pMsg.result = 4;
 		gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);

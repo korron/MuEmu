@@ -1453,7 +1453,7 @@ bool CObjectManager::CharacterLevelUp(LPOBJ lpObj,DWORD AddExperience,int MaxLev
 
 			lpObj->LevelUpPoint += gServerInfo.m_LevelUpPoint[lpObj->Class];
 
-			lpObj->LevelUpPoint += ((lpObj->Level>220)?((gQuest.CheckQuestListState(lpObj,2,QUEST_FINISH)==0)?0:gServerInfo.m_PlusStatPoint):0);
+			lpObj->LevelUpPoint += ((lpObj->Level>1) ? ((gQuest.CheckQuestListState(lpObj, 2, QUEST_FINISH) == 0) ? 0 : gServerInfo.m_PlusStatPoint) : 0);
 
 			AddExperience -= (((--MaxLevelUp)==0)?AddExperience:(lpObj->NextExperience-lpObj->Experience));
 
@@ -2292,6 +2292,18 @@ bool CObjectManager::CharacterUseJewelOfBles(LPOBJ lpObj,int SourceSlot,int Targ
 	}
 
 	CItem* lpItem = &lpObj->Inventory[TargetSlot];
+
+
+	if (lpItem->m_Index == GET_ITEM(4, 15)) // Disable Arrow
+	{
+		return 0;
+	}
+
+
+	if (lpItem->m_Index == GET_ITEM(4, 7)) // Disable Bolt
+	{
+		return 0;
+	}
 
 	if(lpObj->Inventory[SourceSlot].m_Index == GET_ITEM(12,30) && lpItem->m_Index != GET_ITEM(0,41))
 	{

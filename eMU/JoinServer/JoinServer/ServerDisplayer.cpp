@@ -63,8 +63,14 @@ void CServerDisplayer::SetWindowName() // OK
 {
 	char buff[256];
 
-	wsprintf(buff,"[%s] MuEMU JoinServer (QueueSize : %d) (AccountCount : %d/%d)",JOINSERVER_VERSION,gSocketManager.GetQueueSize(),gAccountManager.GetAccountCount(),gJoinServerMaxAccount[gProtect.m_AuthInfo.PackageType][gProtect.m_AuthInfo.PlanType]);
-
+	wsprintf(buff, "[%s] JoinServer (QueueSize : %d) (AccountCount : %d/%d)", JOINSERVER_VERSION, gSocketManager.GetQueueSize(),
+		gAccountManager.GetAccountCount(),
+#if    PROTECT_STATE
+		gJoinServerMaxAccount[gProtect.m_AuthInfo.PackageType][gProtect.m_AuthInfo.PlanType]
+#else
+		MAX_ACCOUNT
+#endif
+		);
 	SetWindowText(this->m_hwnd,buff);
 }
 
