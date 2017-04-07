@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "D:\MuDokumenty\x-team\pliki\SOURCE EDIT MUEMU\Util\CCRC32.H"
+#include "..\..\Util\CCRC32.H"
 #include "CustomItem.h"
 #include "CustomJewel.h"
 #include "CustomMessage.h"

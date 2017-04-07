@@ -18,13 +18,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ReadMe.txt" />
     <None Include="maininfo.ico">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="icon1.ico">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="MainInfo.ini" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
