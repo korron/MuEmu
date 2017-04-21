@@ -1,4 +1,4 @@
-// ServerDisplayer.cpp: implementation of the CServerDisplayer class.
+﻿// ServerDisplayer.cpp: implementation of the CServerDisplayer class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -23,13 +23,13 @@ CServerDisplayer::CServerDisplayer() // OK
 		memset(&this->m_log[n],0,sizeof(this->m_log[n]));
 	}
 
-	this->m_font = CreateFont(50,0,0,0,FW_THIN,0,0,0,ANSI_CHARSET,OUT_DEFAULT_PRECIS,CLIP_DEFAULT_PRECIS,DEFAULT_QUALITY,DEFAULT_PITCH | FF_DONTCARE,"Times");
+	this->m_font = CreateFont(40,0,0,0,FW_THIN,0,0,0,ANSI_CHARSET,OUT_DEFAULT_PRECIS,CLIP_DEFAULT_PRECIS,DEFAULT_QUALITY,DEFAULT_PITCH | FF_DONTCARE,"Times");
 
 	this->m_brush[0] = CreateSolidBrush(RGB(105,105,105));
 	this->m_brush[1] = CreateSolidBrush(RGB(110,240,120));
 
 	strcpy_s(this->m_DisplayerText[0],"STANDBY MODE");
-	strcpy_s(this->m_DisplayerText[1],"ACTIVE MODE");
+	strcpy_s(this->m_DisplayerText[1],"GAMESERVER ACTIVE");
 }
 
 CServerDisplayer::~CServerDisplayer() // OK
@@ -75,7 +75,7 @@ void CServerDisplayer::SetWindowName() // OK
 {
 	char buff[256];
 
-	wsprintf(buff,"[%s] %s (PlayerCount : %d/%d) (MonsterCount : %d/%d)",GAMESERVER_VERSION,gServerInfo.m_ServerName,gObjTotalUser,gServerInfo.m_ServerMaxUserNumber,gObjTotalMonster,MAX_OBJECT_MONSTER);
+	wsprintf(buff,"%s - MWEBGAME.NET (Player: %d/%d) (Monster: %d/%d)",gServerInfo.m_ServerName,gObjTotalUser,gServerInfo.m_ServerMaxUserNumber,gObjTotalMonster,MAX_OBJECT_MONSTER);
 
 	SetWindowText(this->m_hwnd,buff);
 }

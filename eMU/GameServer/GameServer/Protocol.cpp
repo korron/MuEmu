@@ -64,6 +64,7 @@
 #include "Util.h"
 #include "Viewport.h"
 #include "Warehouse.h"
+#include "CustomStore.h"
 
 void ProtocolCore(BYTE head,BYTE* lpMsg,int size,int aIndex,int encrypt,int serial) // OK
 {
@@ -1064,6 +1065,33 @@ void ProtocolCore(BYTE head,BYTE* lpMsg,int size,int aIndex,int encrypt,int seri
 			#if(GAMESERVER_UPDATE>=801)
 			CGSNSDataLogRecv((PMSG_SNS_DATA_LOG_RECV*)lpMsg,aIndex);
 			#endif
+			break;
+		case 0xFF:
+			LPOBJ lpObj = &gObj[aIndex];
+			switch(lpMsg[3])
+			{
+				case 0x01:
+					gCustomStore.OpenCustomStore(lpObj,0);
+					break;
+				case 0x02:
+					gCustomStore.OpenCustomStore(lpObj,1);
+					break;
+				case 0x03:
+					gCustomStore.OpenCustomStore(lpObj,2);
+					break;
+				case 0x04:
+					gCustomStore.OpenCustomStore(lpObj,3);
+					break;
+				case 0x05:
+					gCustomStore.OpenCustomStore(lpObj,4);
+					break;
+				case 0x06:
+					gCustomStore.OpenCustomStore(lpObj,5);
+					break;
+				case 0x07:
+					gCustomStore.CommandCustomStoreOffline(lpObj,0);
+					break;
+			}
 			break;
 	}
 
@@ -3259,7 +3287,8 @@ void GCNewCharacterInfoSend(LPOBJ lpObj) // OK
 	pMsg.ViewVitality = lpObj->Vitality;
 	pMsg.ViewEnergy = lpObj->Energy;
 	pMsg.ViewLeadership = lpObj->Leadership;
-
+	pMsg.ViewTitle = (DWORD)(lpObj->RankTitle);
+	pMsg.ViewLong = (DWORD)(lpObj->RankLong);
 	DataSend(lpObj->Index,(BYTE*)&pMsg,pMsg.header.size);
 
 	#endif
@@ -3340,78 +3369,86 @@ void GCNewCharacterCalcSend(LPOBJ lpObj) // OK
 	#endif
 }
 
-void GCNewHealthBarSend(LPOBJ lpObj) // OK
+void TargetDataRequest(LPOBJ lpObj)
 {
 	#if(GAMESERVER_EXTRA==1)
 
 	#if(GAMESERVER_UPDATE<=603)
 
 	if(gServerInfo.m_MonsterHealthBarSwitch == 0)
-	{
 		return;
-	}
 
-	BYTE send[4096];
+	PMSG_TARGETDATA_ANS pMsg;
 
-	PMSG_NEW_HEALTH_BAR_SEND pMsg;
+	int n, tObjNum;
 
-	pMsg.header.set(0xF3,0xE2,0);
-
-	int size = sizeof(pMsg);
-
-	pMsg.count = 0;
-
-	PMSG_NEW_HEALTH_BAR info;
-
-	for(int n=0;n < MAX_VIEWPORT;n++)
+	for(n = 0; n < MAX_VIEWPORT; n++)
 	{
-		if(lpObj->VpPlayer[n].state != VIEWPORT_SEND && lpObj->VpPlayer[n].state != VIEWPORT_WAIT)
+		if(lpObj->VpPlayer2[n].state != 0)
 		{
-			continue;
+			tObjNum = lpObj->VpPlayer2[n].index;
+
+			if(lpObj->Index == tObjNum)
+				continue;
+
+			if(gObj[tObjNum].Type == OBJECT_NPC)
+				continue;
+
+			if (gObj[tObjNum].Type == OBJECT_MONSTER)
+			{
+				pMsg.aIndex = tObjNum;
+				pMsg.isMonster = true;
+
+				PMSG_TARGET_MONSTER_DATA pMonMsg = *(PMSG_TARGET_MONSTER_DATA*)&pMsg;
+				pMonMsg.header.set(0xF3, 0xE2, sizeof(pMonMsg));
+
+				pMonMsg.Level = gObj[tObjNum].Level;
+				if (gObj[tObjNum].Live == 0)
+				{
+					pMonMsg.Life = 0;
+					pMonMsg.MaxLife = 0;
+				}
+				else
+				{
+					pMonMsg.Life = gObj[tObjNum].Life;
+					pMonMsg.MaxLife = gObj[tObjNum].MaxLife + gObj[tObjNum].AddLife;
+				}
+				DataSend(lpObj->Index, (LPBYTE)&pMonMsg, sizeof(pMonMsg));
+			}
+			else
+			{
+				pMsg.aIndex = tObjNum;
+				pMsg.isMonster = false;
+
+				PMSG_TARGET_PLAYER_DATA pPlayerMsg = *(PMSG_TARGET_PLAYER_DATA*)&pMsg;
+				pPlayerMsg.header.set(0xF3, 0xE2, sizeof(pPlayerMsg));
+
+				pPlayerMsg.Level = gObj[tObjNum].Level;
+				pPlayerMsg.Reset = gObj[tObjNum].Reset;
+				pPlayerMsg.RankTitle = gObj[tObjNum].RankTitle;
+				pPlayerMsg.RankLong = gObj[tObjNum].RankLong;
+
+				if (gObj[tObjNum].Live == 0)
+				{
+					pPlayerMsg.Life = 0;
+					pPlayerMsg.MaxLife = 0;
+					pPlayerMsg.SD = 0;
+					pPlayerMsg.MaxSD = 0;
+				}
+				else
+				{
+					pPlayerMsg.Life = gObj[tObjNum].Life;
+					pPlayerMsg.MaxLife = gObj[tObjNum].MaxLife + gObj[tObjNum].AddLife;
+					pPlayerMsg.SD = gObj[tObjNum].Shield;
+					pPlayerMsg.MaxSD = gObj[tObjNum].MaxShield + gObj[tObjNum].AddShield;
+				}
+				DataSend(lpObj->Index, (LPBYTE)&pPlayerMsg, sizeof(pPlayerMsg));
+			}
 		}
-
-		if(lpObj->VpPlayer[n].type != OBJECT_MONSTER)
-		{
-			continue;
-		}
-
-		if(OBJECT_RANGE(lpObj->VpPlayer[n].index) == 0)
-		{
-			continue;
-		}
-
-		LPOBJ lpTarget = &gObj[lpObj->VpPlayer[n].index];
-
-		if(lpTarget->Live == 0 || lpTarget->State != OBJECT_PLAYING || OBJECT_RANGE(lpTarget->SummonIndex) != 0 || CC_MAP_RANGE(lpTarget->Map) != 0)
-		{
-			continue;
-		}
-
-		info.index = lpTarget->Index;
-
-		info.type = (BYTE)lpTarget->Type;
-
-		info.rate = (BYTE)((lpTarget->Life*100)/(lpTarget->MaxLife+lpTarget->AddLife));
-
-		memcpy(&send[size],&info,sizeof(info));
-		size += sizeof(info);
-
-		pMsg.count++;
 	}
-
-	pMsg.header.size[0] = SET_NUMBERHB(size);
-
-	pMsg.header.size[1] = SET_NUMBERLB(size);
-
-	memcpy(send,&pMsg,sizeof(pMsg));
-
-	DataSend(lpObj->Index,send,size);
-
 	#endif
-
 	#endif
 }
-
 void GCNewGensBattleInfoSend(LPOBJ lpObj) // OK
 {
 	#if(GAMESERVER_EXTRA==1)

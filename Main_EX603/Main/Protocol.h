@@ -309,6 +309,9 @@ struct PMSG_CHARACTER_INFO_RECV
 	DWORD ViewVitality;
 	DWORD ViewEnergy;
 	DWORD ViewLeadership;
+	DWORD ViewTitle;
+	DWORD ViewLong;
+	DWORD ViewVIP;
 };
 
 struct PMSG_CHARACTER_REGEN_RECV
@@ -464,6 +467,8 @@ struct PMSG_NEW_CHARACTER_INFO_RECV
 	DWORD ViewVitality;
 	DWORD ViewEnergy;
 	DWORD ViewLeadership;
+	DWORD ViewTitle;
+	DWORD ViewLong;
 };
 
 struct PMSG_NEW_CHARACTER_CALC_RECV
@@ -512,7 +517,7 @@ struct PMSG_NEW_CHARACTER_CALC_RECV
 	DWORD ViewDarkSpiritAttackSpeed;
 	DWORD ViewDarkSpiritAttackSuccessRate;
 };
-
+/*
 struct PMSG_NEW_HEALTH_BAR_RECV
 {
 	PSWMSG_HEAD header; // C2:F3:E2
@@ -525,7 +530,7 @@ struct PMSG_NEW_HEALTH_RECV
 	BYTE type;
 	BYTE rate;
 };
-
+*/
 struct PMSG_NEW_GENS_BATTLE_INFO_RECV
 {
 	PSBMSG_HEAD header; // C1:F3:E3
@@ -544,6 +549,10 @@ struct PMSG_NEW_MESSAGE_RECV
 //**********************************************//
 //************ Client -> GameServer ************//
 //**********************************************//
+struct PMSG_TICKET_SEND
+{
+	PSBMSG_HEAD header; // C1:F3:00
+};
 
 struct PMSG_HELPER_START_SEND
 {
@@ -602,7 +611,6 @@ void GCMasterInfoRecv(PMSG_MASTER_INFO_RECV* lpMsg);
 void GCMasterLevelUpRecv(PMSG_MASTER_LEVEL_UP_RECV* lpMsg);
 void GCNewCharacterInfoRecv(PMSG_NEW_CHARACTER_INFO_RECV* lpMsg);
 void GCNewCharacterCalcRecv(PMSG_NEW_CHARACTER_CALC_RECV* lpMsg);
-void GCNewHealthBarRecv(PMSG_NEW_HEALTH_BAR_RECV* lpMsg);
 void GCNewGensBattleInfoRecv(PMSG_NEW_GENS_BATTLE_INFO_RECV* lpMsg);
 void GCNewMessageRecv(PMSG_NEW_MESSAGE_RECV* lpMsg);
 void DataSend(BYTE* lpMsg,DWORD size);

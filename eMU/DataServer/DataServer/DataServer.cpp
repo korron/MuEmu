@@ -55,7 +55,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine
 
 	char buff[256];
 
-	wsprintf(buff,"[%s] MuEMU DataServer (QueueSize : %d)",DATASERVER_VERSION,0);
+	wsprintf(buff,"DataServer (QueueSize : %d)",0);
 
 	SetWindowText(hWnd,buff);
 

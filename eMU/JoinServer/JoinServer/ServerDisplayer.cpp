@@ -71,7 +71,6 @@ void CServerDisplayer::SetWindowName() // OK
 		MAX_ACCOUNT
 #endif
 		);
-	SetWindowText(this->m_hwnd,buff);
 }
 
 void CServerDisplayer::PaintAllInfo() // OK

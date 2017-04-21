@@ -299,7 +299,6 @@ bool CCommandManager::ManagementCore(LPOBJ lpObj,char* message) // OK
 		case COMMAND_CUSTOM_ATTACK_OFFLINE:
 			gCustomAttack.CommandCustomAttackOffline(lpObj,argument);
 			break;
-		default:
 			return 0;
 	}
 
@@ -456,6 +455,7 @@ void CCommandManager::CommandAddPoint(LPOBJ lpObj,char* arg,int type) // OK
 
 	gLog.Output(LOG_COMMAND,"[CommandAddPoint][%s][%s] - (Type: %d, Amount: %d)",lpObj->Account,lpObj->Name,type,amount);
 }
+
 
 void CCommandManager::CommandAddPointAuto(LPOBJ lpObj,char* arg,int type) // OK
 {

@@ -72,9 +72,15 @@ __declspec(naked) void ResolutionSwitch() // OK
 		Jmp EXIT
 		NEXT8:
 		Cmp Dword Ptr Ss:[Ebp-0x340],0x08
-		Jnz EXIT
+		Jnz NEXT9
 		Mov Dword Ptr Ds:[MAIN_RESOLUTION_X],1920
 		Mov Dword Ptr Ds:[MAIN_RESOLUTION_Y],1080
+		Jmp EXIT
+		NEXT9:
+		Cmp Dword Ptr Ss:[Ebp-0x340],0x09
+		Jnz EXIT
+		Mov Dword Ptr Ds:[MAIN_RESOLUTION_X],1024
+		Mov Dword Ptr Ds:[MAIN_RESOLUTION_Y],650
 		EXIT:
 		Jmp [ResolutionSwitchAddress1]
 	}

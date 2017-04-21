@@ -8,8 +8,8 @@
 #include "CustomJewel.h"
 #include "CustomMessage.h"
 #include "CustomWing.h"
-#include "CustomWingEffect.h"
-
+#include "StaticEffect.h"
+#include "DynamicEffect.h"
 struct MAIN_FILE_INFO
 {
 	BYTE LauncherType; 
@@ -43,6 +43,8 @@ struct MAIN_FILE_INFO
 	CUSTOM_WING_INFO CustomWingInfo[MAX_CUSTOM_WING];
 	CUSTOM_ITEM_INFO CustomItemInfo[MAX_CUSTOM_ITEM];
 	CUSTOM_WING_EFFECT_INFO CustomWingEffectInfo[MAX_CUSTOM_WING_EFFECT];
+	DYNAMIC_WING_EFFECT_INFO DynamicWingEffectInfo[MAX_DYNAMIC_WING_EFFECT];
+	DWORD IsVersion;
 };
 
 class CProtect

@@ -703,6 +703,8 @@ void gObjCharZeroSet(int aIndex) // OK
 	lpObj->CashShopGoblinPointTime = GetTickCount();
 	lpObj->Reset = 0;
 	lpObj->MasterReset = 0;
+	lpObj->RankTitle = 0;
+	lpObj->RankLong = 0;
 	lpObj->ChangeSkin = 0;
 	lpObj->LoadQuestWorld = 0;
 	lpObj->QuestWorldMonsterClass = -1;
@@ -2873,7 +2875,8 @@ void gObjSecondProc()
 
 				gObjCheckMapTile(lpObj,3);
 
-				GCNewHealthBarSend(lpObj);
+				//GCNewHealthBarSend(lpObj);
+				TargetDataRequest(lpObj);
 
 				if(lpObj->ChatLimitTime > 0)
 				{

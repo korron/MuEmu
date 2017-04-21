@@ -160,6 +160,44 @@ struct PSWMSG_HEAD
 //************ Client -> GameServer ************//
 //**********************************************//
 
+#pragma pack(push, 1)
+struct PMSG_TARGETDATA_REQ
+{
+	PSWMSG_HEAD header;
+	int	aIndex;
+};
+#pragma pack(pop)
+
+
+#pragma pack(push, 1)
+struct PMSG_TARGETDATA_ANS
+{
+	PSWMSG_HEAD header;
+	int		aIndex;
+	bool isMonster;
+};
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+struct PMSG_TARGET_MONSTER_DATA : PMSG_TARGETDATA_ANS
+{
+	int Life;
+	int MaxLife;
+	short Level;
+};
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+struct PMSG_TARGET_PLAYER_DATA : PMSG_TARGET_MONSTER_DATA
+{
+	int SD;
+	int MaxSD;
+	short Reset;
+	short RankTitle;
+	short RankLong;
+};
+#pragma pack(pop)
+
 struct PMSG_CHAT_RECV
 {
 	PBMSG_HEAD header; // C1:00
@@ -818,6 +856,8 @@ struct PMSG_CHARACTER_INFO_SEND
 	DWORD ViewVitality;
 	DWORD ViewEnergy;
 	DWORD ViewLeadership;
+	DWORD ViewTitle;
+	DWORD ViewLong;
 	#endif
 };
 
@@ -1026,6 +1066,8 @@ struct PMSG_NEW_CHARACTER_INFO_SEND
 	DWORD ViewVitality;
 	DWORD ViewEnergy;
 	DWORD ViewLeadership;
+	DWORD ViewTitle;
+	DWORD ViewLong;
 };
 
 struct PMSG_NEW_CHARACTER_CALC_SEND
@@ -1181,7 +1223,8 @@ void GCFireworksSend(LPOBJ lpObj,int x,int y);
 void GCServerCommandSend(int aIndex,BYTE type,BYTE cmd1,BYTE cmd2);
 void GCNewCharacterInfoSend(LPOBJ lpObj);
 void GCNewCharacterCalcSend(LPOBJ lpObj);
-void GCNewHealthBarSend(LPOBJ lpObj);
+//void GCNewHealthBarSend(LPOBJ lpObj);
+void TargetDataRequest(LPOBJ lpObj);
 void GCNewGensBattleInfoSend(LPOBJ lpObj);
 void GCNewMessageSend(LPOBJ lpObj,char* message);
 

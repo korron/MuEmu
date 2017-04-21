@@ -5,6 +5,7 @@
 #include "Protect.h"
 #include "Protocol.h"
 #include "Util.h"
+#include "Import.h"
 
 char GameServerAddress[16];
 WORD GameServerPort;
@@ -99,9 +100,9 @@ void ReconnectDrawInterface() // OK
 
 	progress = ((progress>150)?150:progress);
 
-	DrawInterface(0x7A65,StartX,StartY,160.0f,18.0f);
+	pDrawGUI(0x7A65,StartX,StartY,160.0f,18.0f);
 
-	DrawInterface(0x7A66,(StartX+5.0f),(StartY+5.0f),progress,8.0f);
+	pDrawGUI(0x7A66,(StartX+5.0f),(StartY+5.0f),progress,8.0f);
 
 	char buff[256];
 

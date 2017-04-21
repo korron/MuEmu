@@ -2456,6 +2456,162 @@ void CChaosBox::Wing3Mix(LPOBJ lpObj) // OK
 	}
 }
 
+void CChaosBox::Wing4Mix(LPOBJ lpObj) // OK
+{
+	int ChaosCount = 0;
+	int CreationCount = 0;
+	int SoulPack10 = 0;
+	int BlessPack10 = 0;
+	int FeatherCount = 0;
+	int ItemCount = 0;
+	int ItemMoney = 0;
+
+	for(int n=0;n < CHAOS_BOX_SIZE;n++)
+	{
+		if(lpObj->ChaosBox[n].IsItem() == 0)
+		{
+			continue;
+		}
+
+		if(lpObj->ChaosBox[n].m_Index == GET_ITEM(12,15))
+		{
+			ChaosCount++;
+		}
+		else if(lpObj->ChaosBox[n].m_Index == GET_ITEM(14,22))
+		{
+			CreationCount++;
+		}
+		else if(lpObj->ChaosBox[n].m_Index == GET_ITEM(12,31) && lpObj->ChaosBox[n].m_Level == 0)
+		{
+			SoulPack10++;
+		}
+		else if(lpObj->ChaosBox[n].m_Index == GET_ITEM(12,30) && lpObj->ChaosBox[n].m_Level == 0)
+		{
+			BlessPack10++;
+		}
+		else if(lpObj->ChaosBox[n].m_Index == GET_ITEM(14,182))
+		{
+			FeatherCount++;
+		}
+		else if(lpObj->ChaosBox[n].IsExcItem() != 0 && lpObj->ChaosBox[n].m_Level >= 9 && lpObj->ChaosBox[n].m_Option3 >= 1)
+		{
+			ItemCount++;
+			ItemMoney += lpObj->ChaosBox[n].m_BuyMoney;
+		}
+	}
+
+	if(ChaosCount != 1 || CreationCount != 1 || SoulPack10 != 1 || BlessPack10 != 1 || FeatherCount != 1 || ItemCount == 0)
+	{
+		this->GCChaosMixSend(lpObj->Index,7,0);
+		return;
+	}
+
+	if(gServerInfo.m_Wing4MixRate[lpObj->AccountLevel] == -1)
+	{
+		lpObj->ChaosSuccessRate = (ItemMoney/3000000)+1;
+	}
+	else
+	{
+		lpObj->ChaosSuccessRate = gServerInfo.m_Wing4MixRate[lpObj->AccountLevel];
+	}
+
+	if(this->GetTalismanOfLuckRate(lpObj,&lpObj->ChaosSuccessRate) == 0)
+	{
+		this->GCChaosMixSend(lpObj->Index,240,0);
+		return;
+	}
+
+	if(gServerInfo.m_Wing4MixRate[lpObj->AccountLevel] == -1)
+	{
+		lpObj->ChaosSuccessRate = ((lpObj->ChaosSuccessRate>40)?40:lpObj->ChaosSuccessRate);
+	}
+	else
+	{
+		lpObj->ChaosSuccessRate = ((lpObj->ChaosSuccessRate>100)?100:lpObj->ChaosSuccessRate);
+	}
+
+	lpObj->ChaosMoney = lpObj->ChaosSuccessRate*200000;
+
+	int TaxMoney = (lpObj->ChaosMoney*gCastleSiegeSync.GetTaxRateChaos(lpObj->Index))/100;
+
+	lpObj->ChaosMoney += TaxMoney;
+
+	if(lpObj->Money < ((DWORD)lpObj->ChaosMoney))
+	{
+		this->GCChaosMixSend(lpObj->Index,2,0);
+		return;
+	}
+
+	lpObj->Money -= lpObj->ChaosMoney;
+
+	GCMoneySend(lpObj->Index,lpObj->Money);
+
+	gCastleSiegeSync.AddTributeMoney(TaxMoney);
+
+	if((GetLargeRand()%100) < lpObj->ChaosSuccessRate)
+	{
+		WORD ItemIndex = 0;
+		BYTE ItemOption2 = 0;
+		BYTE ItemOption3 = 0;
+		BYTE ItemNewOption = 0;
+
+		CRandomManager RandomManager;
+
+		RandomManager.AddElement(GET_ITEM(12,186),1);
+
+		RandomManager.AddElement(GET_ITEM(12,187),1);
+
+		RandomManager.AddElement(GET_ITEM(12,188),1);
+
+		RandomManager.AddElement(GET_ITEM(12,189),1);
+
+		RandomManager.AddElement(GET_ITEM(12,190),1);
+
+		RandomManager.AddElement(GET_ITEM(12,191),1);
+
+		RandomManager.AddElement(GET_ITEM(12,192),1);
+		
+		RandomManager.AddElement(GET_ITEM(12,193),1);
+		
+		RandomManager.AddElement(GET_ITEM(12,194),1);
+		
+		RandomManager.AddElement(GET_ITEM(12,195),1);
+		
+		RandomManager.AddElement(GET_ITEM(12,196),1);
+		RandomManager.AddElement(GET_ITEM(12,197),1);
+		RandomManager.AddElement(GET_ITEM(12,198),1);
+		RandomManager.AddElement(GET_ITEM(12,199),1);
+		RandomManager.AddElement(GET_ITEM(12,201),1);
+		RandomManager.AddElement(GET_ITEM(12,202),1);
+		RandomManager.AddElement(GET_ITEM(12,203),1);
+		RandomManager.AddElement(GET_ITEM(12,204),1);
+
+		RandomManager.GetRandomElement(&ItemIndex);
+
+		gItemOptionRate.GetItemOption2(6,&ItemOption2);
+
+		gItemOptionRate.GetItemOption3(6,&ItemOption3);
+
+		gItemOptionRate.GetItemOption4(6,&ItemNewOption);
+
+		gItemOptionRate.MakeNewOption(ItemIndex,ItemNewOption,&ItemNewOption);
+
+		GDCreateItemSend(lpObj->Index,0xFF,0,0,ItemIndex,0,0,0,ItemOption2,ItemOption3,-1,(ItemNewOption+(16*(GetLargeRand()%3))),0,0,0,0,0xFF,0);
+
+		gLog.Output(LOG_CHAOS_MIX,"[Wing4Mix][Success][%s][%s] - (ChaosSuccessRate: %d, ChaosMoney: %d)",lpObj->Account,lpObj->Name,lpObj->ChaosSuccessRate,lpObj->ChaosMoney);
+	}
+	else
+	{
+		this->ChaosBoxInit(lpObj);
+
+		this->GCChaosBoxSend(lpObj,0);
+
+		this->GCChaosMixSend(lpObj->Index,0,0);
+
+		gLog.Output(LOG_CHAOS_MIX,"[Wing4Mix][Failure][%s][%s] - (ChaosSuccessRate: %d, ChaosMoney: %d)",lpObj->Account,lpObj->Name,lpObj->ChaosSuccessRate,lpObj->ChaosMoney);
+	}
+}
+
 void CChaosBox::ChaosCardMix(LPOBJ lpObj,int type) // OK
 {
 	int ChaosCardCount = 0;
@@ -3330,7 +3486,304 @@ void CChaosBox::LuckyItemRefineMix(LPOBJ lpObj) // OK
 
 	#endif
 }
+void CChaosBox::eX802WingMix(LPOBJ lpObj) // OK
+{
+	#if(GAMESERVER_UPDATE>=601)
 
+	int ChaosCount = 0;
+	int CreationCount = 0;
+	int BlessCount = 0;
+	int SoulCount = 0;
+	int MaterialType = 0;
+	int ItemCount = 0;
+	int ItemMoney = 0;
+	int WingItemCount = 0;
+	int WingItemMoney = 0;
+	int WingItemType = 0;
+
+	for(int n=0;n < CHAOS_BOX_SIZE;n++)
+	{
+		if(lpObj->ChaosBox[n].IsItem() == 0)
+		{
+			continue;
+		}
+
+		if(lpObj->ChaosBox[n].m_Index == GET_ITEM(12,15))
+		{
+			ChaosCount++;
+		}
+		else if(lpObj->ChaosBox[n].m_Index == GET_ITEM(14,22))
+		{
+			CreationCount++;
+		}
+		else if(lpObj->ChaosBox[n].m_Index == GET_ITEM(12,30))
+		{
+			BlessCount++;
+		}
+		else if(lpObj->ChaosBox[n].m_Index == GET_ITEM(12,31))
+		{
+			SoulCount++;
+		}		
+		else if(lpObj->ChaosBox[n].m_Index == GET_ITEM(14,180))
+		{
+			MaterialType = 1;
+		}
+		else if(lpObj->ChaosBox[n].m_Index == GET_ITEM(14,181))
+		{
+			MaterialType = 2;
+		}
+		else if(lpObj->ChaosBox[n].IsSetItem() != 0 && lpObj->ChaosBox[n].m_Level >= 7 && lpObj->ChaosBox[n].m_Option3 >= 1)
+		{
+			ItemCount++;
+			ItemMoney += lpObj->ChaosBox[n].m_BuyMoney;
+		}		
+	}
+
+	if(ChaosCount != 1 || BlessCount != 1 || SoulCount != 1 || CreationCount != 1 || MaterialType == 0 || ItemCount == 0)
+	{
+		this->GCChaosMixSend(lpObj->Index,7,0);
+		return;
+	}
+
+	if(gServerInfo.m_eX802WingMixRate[lpObj->AccountLevel] == -1)
+	{
+		lpObj->ChaosSuccessRate = WingItemMoney/((WingItemType==0)?9000000:500000);
+	}
+	else
+	{
+		lpObj->ChaosSuccessRate = gServerInfo.m_eX802WingMixRate[lpObj->AccountLevel];
+	}
+
+	if(this->GetTalismanOfLuckRate(lpObj,&lpObj->ChaosSuccessRate) == 0)
+	{
+		this->GCChaosMixSend(lpObj->Index,240,0);
+		return;
+	}
+
+	if(gServerInfo.m_eX802WingMixRate[lpObj->AccountLevel] == -1)
+	{
+		lpObj->ChaosSuccessRate = ((lpObj->ChaosSuccessRate>60)?60:lpObj->ChaosSuccessRate);
+	}
+	else
+	{
+		lpObj->ChaosSuccessRate = ((lpObj->ChaosSuccessRate>100)?100:lpObj->ChaosSuccessRate);
+	}
+
+	lpObj->ChaosMoney = lpObj->ChaosSuccessRate*100000;
+
+	int TaxMoney = (lpObj->ChaosMoney*gCastleSiegeSync.GetTaxRateChaos(lpObj->Index))/100;
+
+	lpObj->ChaosMoney += TaxMoney;
+
+	if(lpObj->Money < ((DWORD)lpObj->ChaosMoney))
+	{
+		this->GCChaosMixSend(lpObj->Index,2,0);
+		return;
+	}
+
+	lpObj->Money -= lpObj->ChaosMoney;
+
+	GCMoneySend(lpObj->Index,lpObj->Money);
+
+	gCastleSiegeSync.AddTributeMoney(TaxMoney);
+
+	if((GetLargeRand()%100) < lpObj->ChaosSuccessRate)
+	{
+		WORD ItemIndex = 0;
+		BYTE ItemOption2 = 0;
+		BYTE ItemOption3 = 0;
+		BYTE ItemNewOption = 0;
+
+		switch(MaterialType)
+		{
+			case 1:
+				ItemIndex = GET_ITEM(12,180);
+				break;
+			case 2:
+				ItemIndex = GET_ITEM(12,181);
+				break;
+		}
+
+		gItemOptionRate.GetItemOption2(7,&ItemOption2);
+
+		gItemOptionRate.GetItemOption3(7,&ItemOption3);
+
+		gItemOptionRate.GetItemOption4(7,&ItemNewOption);
+
+		gItemOptionRate.MakeNewOption(ItemIndex,ItemNewOption,&ItemNewOption);
+
+		GDCreateItemSend(lpObj->Index,0xFF,0,0,ItemIndex,0,0,0,ItemOption2,ItemOption3,-1,(ItemNewOption+(16*(GetLargeRand()%2))),0,0,0,0,0xFF,0);
+
+		gLog.Output(LOG_CHAOS_MIX,"[eX802WingMix][Success][%s][%s] - (ChaosSuccessRate: %d, ChaosMoney: %d)",lpObj->Account,lpObj->Name,lpObj->ChaosSuccessRate,lpObj->ChaosMoney);
+	}
+	else
+	{
+		this->ChaosBoxInit(lpObj);
+
+		this->GCChaosBoxSend(lpObj,0);
+
+		this->GCChaosMixSend(lpObj->Index,0,0);
+
+		gLog.Output(LOG_CHAOS_MIX,"[eX802WingMix][Failure][%s][%s] - (ChaosSuccessRate: %d, ChaosMoney: %d)",lpObj->Account,lpObj->Name,lpObj->ChaosSuccessRate,lpObj->ChaosMoney);
+	}
+
+	#endif
+}
+
+
+void CChaosBox::MonsterWingMix(LPOBJ lpObj) // OK
+{
+	#if(GAMESERVER_UPDATE>=601)
+
+	int ChaosCount = 0;
+	int CreationCount = 0;
+	int MaterialType = 0;
+	int WingItemCount = 0;
+	int WingItemMoney = 0;
+	int WingItemType = 0;
+
+	for(int n=0;n < CHAOS_BOX_SIZE;n++)
+	{
+		if(lpObj->ChaosBox[n].IsItem() == 0)
+		{
+			continue;
+		}
+
+		if(lpObj->ChaosBox[n].m_Index == GET_ITEM(12,15))
+		{
+			ChaosCount++;
+		}
+		else if(lpObj->ChaosBox[n].m_Index == GET_ITEM(14,22))
+		{
+			CreationCount++;
+		}
+		else if(lpObj->ChaosBox[n].m_Index == GET_ITEM(14,176))
+		{
+			MaterialType = 1;
+		}
+		else if(lpObj->ChaosBox[n].m_Index == GET_ITEM(14,177))
+		{
+			MaterialType = 2;
+		}
+		else if(lpObj->ChaosBox[n].m_Index == GET_ITEM(14,178))
+		{
+			MaterialType = 3;
+		}
+		else if(lpObj->ChaosBox[n].m_Index == GET_ITEM(14,179))
+		{
+			MaterialType = 4;
+		}
+		else if((lpObj->ChaosBox[n].m_Index >= GET_ITEM(12,3) && lpObj->ChaosBox[n].m_Index <= GET_ITEM(12,6)) || lpObj->ChaosBox[n].m_Index == GET_ITEM(12,42))
+		{
+			WingItemCount++;
+			WingItemMoney += lpObj->ChaosBox[n].m_BuyMoney;
+			WingItemType = 0;
+		}
+		else if(lpObj->ChaosBox[n].m_Index == GET_ITEM(12,49) || lpObj->ChaosBox[n].m_Index == GET_ITEM(13,30))
+		{
+			WingItemCount++;
+			WingItemMoney += lpObj->ChaosBox[n].m_BuyMoney;
+			WingItemType = 1;
+		}
+	}
+
+	if(ChaosCount != 1 || CreationCount != 1 || MaterialType == 0 || WingItemCount != 1)
+	{
+		this->GCChaosMixSend(lpObj->Index,7,0);
+		return;
+	}
+
+	if(gServerInfo.m_MonsterWingMixRate[lpObj->AccountLevel] == -1)
+	{
+		lpObj->ChaosSuccessRate = WingItemMoney/((WingItemType==0)?9000000:500000);
+	}
+	else
+	{
+		lpObj->ChaosSuccessRate = gServerInfo.m_MonsterWingMixRate[lpObj->AccountLevel];
+	}
+
+	if(this->GetTalismanOfLuckRate(lpObj,&lpObj->ChaosSuccessRate) == 0)
+	{
+		this->GCChaosMixSend(lpObj->Index,240,0);
+		return;
+	}
+
+	if(gServerInfo.m_MonsterWingMixRate[lpObj->AccountLevel] == -1)
+	{
+		lpObj->ChaosSuccessRate = ((lpObj->ChaosSuccessRate>60)?60:lpObj->ChaosSuccessRate);
+	}
+	else
+	{
+		lpObj->ChaosSuccessRate = ((lpObj->ChaosSuccessRate>100)?100:lpObj->ChaosSuccessRate);
+	}
+
+	lpObj->ChaosMoney = lpObj->ChaosSuccessRate*100000;
+
+	int TaxMoney = (lpObj->ChaosMoney*gCastleSiegeSync.GetTaxRateChaos(lpObj->Index))/100;
+
+	lpObj->ChaosMoney += TaxMoney;
+
+	if(lpObj->Money < ((DWORD)lpObj->ChaosMoney))
+	{
+		this->GCChaosMixSend(lpObj->Index,2,0);
+		return;
+	}
+
+	lpObj->Money -= lpObj->ChaosMoney;
+
+	GCMoneySend(lpObj->Index,lpObj->Money);
+
+	gCastleSiegeSync.AddTributeMoney(TaxMoney);
+
+	if((GetLargeRand()%100) < lpObj->ChaosSuccessRate)
+	{
+		WORD ItemIndex = 0;
+		BYTE ItemOption2 = 0;
+		BYTE ItemOption3 = 0;
+		BYTE ItemNewOption = 0;
+
+		switch(MaterialType)
+		{
+			case 1:
+				ItemIndex = GET_ITEM(12,182);
+				break;
+			case 2:
+				ItemIndex = GET_ITEM(12,183);
+				break;
+			case 3:
+				ItemIndex = GET_ITEM(12,184);
+				break;
+			case 4:
+				ItemIndex = GET_ITEM(12,185);
+				break;
+		}
+
+		gItemOptionRate.GetItemOption2(7,&ItemOption2);
+
+		gItemOptionRate.GetItemOption3(7,&ItemOption3);
+
+		gItemOptionRate.GetItemOption4(7,&ItemNewOption);
+
+		gItemOptionRate.MakeNewOption(ItemIndex,ItemNewOption,&ItemNewOption);
+
+		GDCreateItemSend(lpObj->Index,0xFF,0,0,ItemIndex,0,0,0,ItemOption2,ItemOption3,-1,(ItemNewOption+(16*(GetLargeRand()%2))),0,0,0,0,0xFF,0);
+
+		gLog.Output(LOG_CHAOS_MIX,"[MonsterWingMix][Success][%s][%s] - (ChaosSuccessRate: %d, ChaosMoney: %d)",lpObj->Account,lpObj->Name,lpObj->ChaosSuccessRate,lpObj->ChaosMoney);
+	}
+	else
+	{
+		this->ChaosBoxInit(lpObj);
+
+		this->GCChaosBoxSend(lpObj,0);
+
+		this->GCChaosMixSend(lpObj->Index,0,0);
+
+		gLog.Output(LOG_CHAOS_MIX,"[MonsterWingMix][Failure][%s][%s] - (ChaosSuccessRate: %d, ChaosMoney: %d)",lpObj->Account,lpObj->Name,lpObj->ChaosSuccessRate,lpObj->ChaosMoney);
+	}
+
+	#endif
+}
+/* eX701
 void CChaosBox::MonsterWingMix(LPOBJ lpObj) // OK
 {
 	#if(GAMESERVER_UPDATE>=701)
@@ -3483,7 +3936,7 @@ void CChaosBox::MonsterWingMix(LPOBJ lpObj) // OK
 
 	#endif
 }
-
+*/
 void CChaosBox::SocketWeaponMix(LPOBJ lpObj) // OK
 {
 	#if(GAMESERVER_UPDATE>=701)
@@ -4425,6 +4878,9 @@ void CChaosBox::CGChaosMixRecv(PMSG_CHAOS_MIX_RECV* lpMsg,int aIndex) // OK
 		case CHAOS_MIX_WING4:
 			this->Wing3Mix(lpObj);
 			break;
+		case CHAOS_MIX_WING5:
+			this->Wing4Mix(lpObj);
+			break;
 		case CHAOS_MIX_CHAOS_CARD:
 			this->ChaosCardMix(lpObj,0);
 			break;
@@ -4469,6 +4925,9 @@ void CChaosBox::CGChaosMixRecv(PMSG_CHAOS_MIX_RECV* lpMsg,int aIndex) // OK
 			break;
 		case CHAOS_MIX_SOCKET_WEAPON:
 			this->SocketWeaponMix(lpObj);
+			break;
+		case CHAOS_MIX_EX802_WING:
+			this->eX802WingMix(lpObj);
 			break;
 	}
 }

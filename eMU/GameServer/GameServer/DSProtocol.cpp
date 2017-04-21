@@ -784,7 +784,7 @@ void DGCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg) // OK
 		else if(gCustomWing.CheckCustomWingByItem(GET_ITEM(12,TempInventory[7])) != 0)
 		{
 			info.CharSet[5] |= 12;
-			info.CharSet[17] |= (gCustomWing.GetCustomWingIndex(GET_ITEM(12,TempInventory[7]))+1) << 1;
+			info.CharSet[17] |= (gCustomWing.GetCustomWingIndex(GET_ITEM(12,TempInventory[7]))+1) << 2;
 		}
 
 		#else
@@ -867,15 +867,33 @@ void DGCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg) // OK
 
 			if((lpInfo->Inventory[42] & 1) != 0)
 			{
-				info.CharSet[16] |= 1;
+					info.CharSet[17] |= 0x00;
+					info.CharSet[16] |= 0x01;
 			}
 			else if((lpInfo->Inventory[42] & 2) != 0)
 			{
-				info.CharSet[16] |= 2;
+					info.CharSet[17] |= 0x00;
+					info.CharSet[16] |= 0x02;
 			}
 			else if((lpInfo->Inventory[42] & 4) != 0)
 			{
-				info.CharSet[17] |= 1;
+					info.CharSet[17] |= 0x00;
+					info.CharSet[16] |= 0x03;
+			}
+			else if((lpInfo->Inventory[42] & 8) != 0)
+			{
+					info.CharSet[17] |= 0x01;
+					info.CharSet[16] |= 0x01;
+			}
+			else if((lpInfo->Inventory[42] & 16) != 0)
+			{
+					info.CharSet[17] |= 0x01;
+					info.CharSet[16] |= 0x02;
+			}
+			else if((lpInfo->Inventory[42] & 32) != 0)
+			{
+					info.CharSet[17] |= 0x01;
+					info.CharSet[16] |= 0x03;
 			}
 		}
 		else if(TempInventory[8] == 64 || TempInventory[8] == 65 || TempInventory[8] == 67)
@@ -1140,6 +1158,8 @@ void DGCharacterInfoRecv(SDHP_CHARACTER_INFO_RECV* lpMsg) // OK
 	pMsg.ViewVitality = lpObj->Vitality;
 	pMsg.ViewEnergy = lpObj->Energy;
 	pMsg.ViewLeadership = lpObj->Leadership;
+	pMsg.ViewTitle = (DWORD)(lpObj->RankTitle);
+	pMsg.ViewLong = (DWORD)(lpObj->RankLong);
 	#endif
 
 	DataSend(lpObj->Index,(BYTE*)&pMsg,pMsg.header.size);
@@ -1252,9 +1272,11 @@ void DGCharacterInfoRecv(SDHP_CHARACTER_INFO_RECV* lpMsg) // OK
 
 	gObjectManager.CharacterUpdateMapEffect(lpObj);
 
-	gNotice.GCNoticeSend(lpObj->Index,0,0,0,0,0,0,gMessage.GetMessage(256),lpObj->Name);
+	//gNotice.GCNoticeSend(lpObj->Index,0,0,0,0,0,0,gMessage.GetMessage(256),lpObj->Name);
 
-	gNotice.GCNoticeSend(lpObj->Index,1,0,0,0,0,0,gMessage.GetMessage((248+lpObj->AccountLevel)),lpObj->AccountExpireDate);
+	gNotice.GCWelcomeSend(lpObj->Index,gMessage.GetMessage(256),lpObj->Name);
+
+	gNotice.GCWelcomeSend(lpObj->Index,gMessage.GetMessage((248+lpObj->AccountLevel)),lpObj->AccountExpireDate);
 
 	lpObj->MapServerMoveRequest = 0;
 
@@ -2174,6 +2196,9 @@ void GDCharacterInfoSaveSend(int aIndex) // OK
 
 	pMsg.FruitAddPoint = lpObj->FruitAddPoint;
 	pMsg.FruitSubPoint = lpObj->FruitSubPoint;
+
+	pMsg.RankTitle = lpObj->RankTitle;
+	pMsg.RankLong = lpObj->RankLong;
 
 	for(int n=0;n < MAX_EFFECT_LIST;n++){gEffectManager.EffectByteConvert(pMsg.Effect[n],&lpObj->Effect[n]);}
 

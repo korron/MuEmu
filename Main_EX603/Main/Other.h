@@ -1,0 +1,2 @@
+void InitOGLHook();
+void LoadCustom();

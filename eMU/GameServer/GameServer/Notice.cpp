@@ -153,6 +153,29 @@ void CNotice::GCNoticeSend(int aIndex,BYTE type,BYTE count,BYTE opacity,WORD del
 	DataSend(aIndex,(BYTE*)&pMsg,pMsg.header.size);
 }
 
+void CNotice::GCWelcomeSend(int aIndex,char* message,char* text) // OK
+{
+	char buff[256] = {'@'};
+
+	wsprintf(&buff[1],message,text);
+
+	int size = strlen(buff);
+
+	size = ((size>MAX_CHAT_MESSAGE_SIZE)?MAX_CHAT_MESSAGE_SIZE:size);
+
+	PMSG_WELCOME_SEND pMsg;
+
+	pMsg.header.set(0x00,(sizeof(pMsg)-(sizeof(pMsg.message)-(size+1))));
+
+	memcpy(pMsg.message,buff,size);
+
+	pMsg.message[size] = 0;
+
+	DataSend(aIndex,(BYTE*)&pMsg,pMsg.header.size);
+
+}
+
+
 void CNotice::GCNoticeSendToAll(BYTE type,BYTE count,BYTE opacity,WORD delay,DWORD color,BYTE speed,char* message,...) // OK
 {
 	char buff[256] = {0};

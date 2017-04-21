@@ -59,7 +59,7 @@ void CServerDisplayer::SetWindowName() // OK
 {
 	char buff[256];
 
-	wsprintf(buff,"[%s] MuEMU ConnectServer (QueueSize : %d)",CONNECTSERVER_VERSION,gSocketManager.GetQueueSize());
+	wsprintf(buff,"ConnectServer (QueueSize : %d)",gSocketManager.GetQueueSize());
 
 	SetWindowText(this->m_hwnd,buff);
 }

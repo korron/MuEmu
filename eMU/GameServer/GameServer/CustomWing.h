@@ -4,7 +4,7 @@
 
 #pragma once
 
-#define MAX_CUSTOM_WING 15
+#define MAX_CUSTOM_WING 70
 
 struct CUSTOM_WING_INFO
 {

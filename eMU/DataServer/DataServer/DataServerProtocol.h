@@ -318,6 +318,8 @@ struct SDHP_CHARACTER_INFO_SAVE_RECV
 	BYTE Quest[50];
 	WORD FruitAddPoint;
 	WORD FruitSubPoint;
+	DWORD RankTitle;
+	DWORD Long;
 	BYTE Effect[MAX_EFFECT_LIST][13];
 	#if(DATASERVER_UPDATE>=602)
 	BYTE ExtInventory;
@@ -607,6 +609,8 @@ struct SDHP_CHARACTER_INFO_SEND
 	BYTE Quest[50];
 	WORD FruitAddPoint;
 	WORD FruitSubPoint;
+	DWORD RankTitle;
+	DWORD Long;
 	BYTE Effect[MAX_EFFECT_LIST][13];
 	#if(DATASERVER_UPDATE>=602)
 	BYTE ExtInventory;

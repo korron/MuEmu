@@ -15,8 +15,9 @@ typedef unsigned __int64 QWORD;
 #include <winsock2.h>
 #include <Mmsystem.h>
 #include <gl\GL.h>
+#include <time.h>
 #include "detours.h"
-
+#include <sys\stat.h>
 #pragma comment(lib,"ws2_32.lib")
 #pragma comment(lib,"Winmm.lib")
 #pragma comment(lib,"Opengl32.lib")

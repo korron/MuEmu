@@ -1327,6 +1327,7 @@ void CAttack::HelperSprite(LPOBJ lpObj,LPOBJ lpTarget,int* damage) // OK
 			{
 				(*damage) = ((*damage)*(100-((gServerInfo.m_DarkHorseDecDamageConstA+lpItem->m_PetItemLevel)/gServerInfo.m_DarkHorseDecDamageConstB)))/100;
 			}
+			
 			else if(lpItem->m_Index == GET_ITEM(13,37)) // Fenrir
 			{
 				if((lpItem->m_NewOption & 2) != 0)
@@ -1334,6 +1335,7 @@ void CAttack::HelperSprite(LPOBJ lpObj,LPOBJ lpTarget,int* damage) // OK
 					(*damage) = ((*damage)*(100-gServerInfo.m_BlueFenrirDecDamageConstA))/100;
 				}
 			}
+
 			else if(lpItem->m_Index == GET_ITEM(13,65)) // Maria
 			{
 				(*damage) = ((*damage)*(100-gServerInfo.m_MariaDecDamageConstA))/100;

@@ -306,7 +306,8 @@ void CCustomStore::OpenCustomStore(LPOBJ lpObj,int type) // OK
 
 	if(lpObj->PShopOpen != 0)
 	{
-		gPersonalShop.GCPShopOpenSend(lpObj->Index,0);
+		gNotice.GCNoticeSend(lpObj->Index,1,0,0,0,0,0,"Please Open Store before set Custom Store");
+		//gPersonalShop.GCPShopOpenSend(lpObj->Index,0);
 		return;
 	}
 
@@ -372,7 +373,7 @@ void CCustomStore::OpenCustomStore(LPOBJ lpObj,int type) // OK
 			break;
 	}
 
-	gPersonalShop.GCPShopOpenSend(lpObj->Index,1);
+	//gPersonalShop.GCPShopOpenSend(lpObj->Index,1);
 
 	PMSG_PSHOP_TEXT_CHANGE_SEND pMsg;
 

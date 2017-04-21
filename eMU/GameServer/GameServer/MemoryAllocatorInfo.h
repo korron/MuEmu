@@ -19,7 +19,7 @@ public:
 	CSkill* m_SkillBackup;
 	CSkill* m_Skill;
 	VIEWPORT_STRUCT* m_VpPlayer;
-	VIEWPORT_STRUCT* m_VpPlayer2;
+	VIEWPORT_PLAYER_STRUCT* m_VpPlayer2;
 	VIEWPORT_STRUCT* m_VpPlayerItem;
 	HIT_DAMAGE_STRUCT* m_HitDamage;
 	CEffect* m_Effect;

@@ -3,9 +3,13 @@
 #include "CustomItem.h"
 #include "CustomJewel.h"
 #include "CustomWing.h"
-#include "CustomWingEffect.h"
+#include "StaticEffect.h"
+#include "DynamicEffect.h"
 #include "Offset.h"
 #include "Util.h"
+#include "TMemory.h"
+#include "Import.h"
+#include "Defines.h"
 
 void InitItem() // OK
 {
@@ -49,7 +53,6 @@ void InitJewel() // OK
 
 void InitWing() // OK
 {
-	SetCompleteHook(0xE9,0x00580047,&WingMakePreviewCharSet);
 
 	SetCompleteHook(0xE9,0x00609FDF,&WingDisableLevelGlow);
 
@@ -67,7 +70,7 @@ void InitWing() // OK
 
 	SetCompleteHook(0xE9,0x005885AA,&WingSetModelType);
 
-	SetCompleteHook(0xE9,0x005666F7,&WingSetEffect);
+	//SetCompleteHook(0xE9,0x005666F7,&WingSetEffect); // Load Hieu Ung Tu File .TXT
 
 	SetCompleteHook(0xE9,0x0050848B,&WingCheckIndex1);
 
@@ -116,6 +119,36 @@ void InitWing() // OK
 	SetCompleteHook(0xE9,0x005F497A,&WingCheckModelIndex2);
 
 	SetCompleteHook(0xE9,0x0060EE4D,&WingCheckModelIndex3);
+	
+	SetOp((LPVOID)0x48FB8C, &PreviewCharSet, ASM::CALL);
+	SetOp((LPVOID)0x63D2D8, &PreviewCharSet, ASM::CALL);
+	SetOp((LPVOID)0x641189, &PreviewCharSet, ASM::CALL);
+	SetOp((LPVOID)0x641F42, &PreviewCharSet, ASM::CALL);
+	SetOp((LPVOID)0x642598, &PreviewCharSet, ASM::CALL);
+	SetOp((LPVOID)0x65EA2D, &PreviewCharSet, ASM::CALL);
+}
+
+void PreviewCharSet(int ObjectIndex, BYTE * CharSet, lpViewObj Object, int Mode)
+{
+	pPreviewCharSet(ObjectIndex, CharSet, Object, Mode);
+
+	lpViewObj lpObj;
+
+	if( Object == 0 )
+	{
+		lpObj = &*(lpViewObj)pGetPreviewStruct(pPreviewThis(), ObjectIndex);
+	}
+	else
+	{
+		lpObj = Object;
+	}
+
+	BYTE CustomWings = CharSet[16] >> 2;
+
+	if( CustomWings > 0 )
+	{
+		lpObj->WingsSlot = ITEM2(12, 180) + (CustomWings - 1);
+	}
 }
 
 void ItemModelLoad() // OK
@@ -1011,6 +1044,19 @@ __declspec(naked) void WingSetEffect() // OK
 		Lea Ecx,gCustomWingEffect
 		Call [CCustomWingEffect::SetWingEffect]
 		Test Eax,Eax
+		Mov Eax,Dword Ptr Ss:[Ebp-0x70]
+		Push Eax
+		Mov Ecx,Dword Ptr Ss:[Ebp-0x6C]
+		Push Ecx
+		Lea Edx,Dword Ptr Ss:[Ebp-0x18]
+		Push Edx
+		Mov Eax,Dword Ptr Ss:[Ebp-0x68]
+		Push Eax
+		Mov Ecx,Dword Ptr Ss:[Ebp-0x530]
+		Sub Ecx,ITEM_BASE_MODEL
+		Push Ecx
+		Lea Ecx,gDynamicWingEffect
+		Call [CDynamicWingEffect::DynamicWingEffect]
 		Je EXIT
 		Jmp [WingSetColorAddress1]
 		EXIT:
@@ -1540,4 +1586,35 @@ __declspec(naked) void WingCheckModelIndex3() // OK
 		Cmp Dword Ptr Ds:[Eax+0x30],0x1CBE
 		Jmp [WingCheckModelIndexAddress2]
 	}
+}
+
+bool IsCustomWings(WORD ItemID, bool Preview)
+{
+	
+	if( Preview )
+	{
+		ItemID -= ITEM_INTER;
+	}
+
+	if (ItemID >= ITEM(12, 180) && ItemID <= ITEM(12, 231))
+	{
+		return true;
+	}
+	
+	return false;
+}
+bool IsCustomItem(WORD ItemID, bool Preview)
+{
+	
+	if( Preview )
+	{
+		ItemID -= ITEM_INTER;
+	}
+
+	if (ItemID >= ITEM(0, 1) && ItemID <= ITEM(11, 200))
+	{
+		return true;
+	}
+	
+	return false;
 }

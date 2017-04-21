@@ -1077,6 +1077,14 @@ void CServerInfo::ReadChaosMixInfo(char* section,char* path) // OK
 
 	this->m_Wing3MixRate[3] = GetPrivateProfileInt(section,"Wing3MixRate_AL3",0,path);
 
+	this->m_Wing4MixRate[0] = GetPrivateProfileInt(section,"Wing4MixRate_AL0",0,path);
+
+	this->m_Wing4MixRate[1] = GetPrivateProfileInt(section,"Wing4MixRate_AL1",0,path);
+
+	this->m_Wing4MixRate[2] = GetPrivateProfileInt(section,"Wing4MixRate_AL2",0,path);
+
+	this->m_Wing4MixRate[3] = GetPrivateProfileInt(section,"Wing4MixRate_AL3",0,path);
+
 	#if(GAMESERVER_UPDATE>=401)
 
 	this->m_SocketItemCreateSeedMixRate[0] = GetPrivateProfileInt(section,"SocketItemCreateSeedMixRate_AL0",0,path);
@@ -1145,7 +1153,7 @@ void CServerInfo::ReadChaosMixInfo(char* section,char* path) // OK
 
 	#endif
 
-	#if(GAMESERVER_UPDATE>=701)
+	#if(GAMESERVER_UPDATE>=601)
 
 	this->m_MonsterWingMixRate[0] = GetPrivateProfileInt(section,"MonsterWingMixRate_AL0",0,path);
 
@@ -1154,6 +1162,14 @@ void CServerInfo::ReadChaosMixInfo(char* section,char* path) // OK
 	this->m_MonsterWingMixRate[2] = GetPrivateProfileInt(section,"MonsterWingMixRate_AL2",0,path);
 
 	this->m_MonsterWingMixRate[3] = GetPrivateProfileInt(section,"MonsterWingMixRate_AL3",0,path);
+
+	this->m_eX802WingMixRate[0] = GetPrivateProfileInt(section,"eX802WingMixRate_AL0",0,path);
+
+	this->m_eX802WingMixRate[1] = GetPrivateProfileInt(section,"eX802WingMixRate_AL1",0,path);
+
+	this->m_eX802WingMixRate[2] = GetPrivateProfileInt(section,"eX802WingMixRate_AL2",0,path);
+
+	this->m_eX802WingMixRate[3] = GetPrivateProfileInt(section,"eX802WingMixRate_AL3",0,path);
 
 	#endif
 
@@ -3752,3 +3768,25 @@ void CServerInfo::ReadSkillInfo(char* section,char* path) // OK
 
 	#endif
 }
+
+void CServerInfo::LoadPetConfig()
+{
+	char GameServerInfo[100] = {0};
+
+	this->NewPetAddFinalDamageRate = GetPrivateProfileInt("NEW_PETS","NewPetAddFinalDamageRate",0,".//DATA//Pets.txt");
+
+	this->WhiteTigerStunRate	= GetPrivateProfileInt("NEW_PETS","WhiteTigerStunRate",0,".//DATA//Pets.txt");
+	this->WhiteTigerStunTime	= GetPrivateProfileInt("NEW_PETS","WhiteTigerStunTime",0,".//DATA//Pets.txt");
+	this->WhiteTigerCriticalRate = GetPrivateProfileInt("NEW_PETS","WhiteTigerCriticalRate",0,".//DATA//Pets.txt");
+	this->WhiteTigerMissRate	= GetPrivateProfileInt("NEW_PETS","WhiteTigerMissRate",0,".//DATA//Pets.txt");
+
+	this->HullWolfFrozeRate		= GetPrivateProfileInt("NEW_PETS","HullWolfFrozeRate",0,".//DATA//Pets.txt");
+	this->HullWolfFrozeTime		= GetPrivateProfileInt("NEW_PETS","HullWolfFrozeTime",0,".//DATA//Pets.txt");
+	this->HullWolfExcDamageRate = GetPrivateProfileInt("NEW_PETS","HullWolfExcDamageRate",0,".//DATA//Pets.txt");
+	this->HullWolfAddDefense	= GetPrivateProfileInt("NEW_PETS","HullWolfAddDefense",0,".//DATA//Pets.txt");
+
+	this->BeastIgnoreSDRate		= GetPrivateProfileInt("NEW_PETS","BeastIgnoreSDRate",0,".//DATA//Pets.txt");
+	this->BeastExcDamageRate	= GetPrivateProfileInt("NEW_PETS","BeastExcDamageRate",0,".//DATA//Pets.txt");
+	this->BeastCriticalRate		= GetPrivateProfileInt("NEW_PETS","BeastCriticalRate",0,".//DATA//Pets.txt");
+}
+

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#define MAX_CUSTOM_ITEM 2000
+#define MAX_CUSTOM_ITEM 1500
 
 struct CUSTOM_ITEM_INFO
 {

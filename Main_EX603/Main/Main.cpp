@@ -6,9 +6,8 @@
 #include "CustomItem.h"
 #include "CustomJewel.h"
 #include "CustomWing.h"
-#include "CustomWingEffect.h"
+#include "StaticEffect.h"
 #include "HackCheck.h"
-#include "HealthBar.h"
 #include "Item.h"
 #include "PacketManager.h"
 #include "PrintPlayer.h"
@@ -17,16 +16,37 @@
 #include "Reconnect.h"
 #include "Resolution.h"
 #include "Util.h"
+#include "WingBright.h"
+#include "WingInvisible.h"
+#include "Interface.h"
+#include "Camera.h"
+#include "User.h"
+#include "Fog.h"
+#include "Other.h"
+#include "SmokeEffect.h"
+#include "Graphics.h"
+#include "Controller.h"
+#include "ChatExpanded.h"
+#include "TrayMode.h"
+#include "CustomBow.h"
+#include "TMemory.h"
+#include "PetHook.h"
+#include "DynamicEffect.h"
+#include "NewMap.h"
+#include "Config.h"
+#include "NewFont.h"
+#include "WingEffect.h"
 
 HINSTANCE hins;
 
 extern "C" _declspec(dllexport) void EntryProc() // OK
 {
-	if(gProtect.ReadMainFile("main.emu") == 0)
+	if(gProtect.ReadMainFile("main") == 0)
 	{
 		ExitProcess(0);
 	}
 
+	gGraphics.Load();
 	SetByte(0x00E61144,0xA0); // Accent
 	SetByte(0x004D1E69,0xEB); // Crack (mu.exe)
 	SetByte(0x004D228D,0xE9); // Crack (GameGuard)
@@ -83,7 +103,7 @@ extern "C" _declspec(dllexport) void EntryProc() // OK
 	SetDword(0x00642112,(DWORD)&MainTickCount);
 	SetDword(0x004D0E09,(DWORD)gProtect.m_MainInfo.WindowName);
 	SetDword(0x004D9F55,(DWORD)gProtect.m_MainInfo.ScreenShotPath);
-
+	//SetByte(0x004030D1 + 3,gProtect.m_MainInfo.IsVersion); // Create character max chars (default: 6)
 	MemorySet(0x0063E908,0x90,20); // C1:F3:04
 
 	MemoryCpy(0x00E611B2,gProtect.m_MainInfo.IpAddress,sizeof(gProtect.m_MainInfo.IpAddress)); // IpAddress
@@ -95,8 +115,6 @@ extern "C" _declspec(dllexport) void EntryProc() // OK
 	SetCompleteHook(0xE9,0x004DA280,&CheckTickCount1);
 
 	SetCompleteHook(0xE9,0x004DA3A1,&CheckTickCount2);
-
-	SetCompleteHook(0xE8,0x005B96E8,&DrawNewHealthBar);
 
 	VirtualizeOffset(0x004D9D39,12);
 
@@ -130,7 +148,9 @@ extern "C" _declspec(dllexport) void EntryProc() // OK
 
 	gCustomItem.Load(gProtect.m_MainInfo.CustomItemInfo);
 
-	gCustomWingEffect.Load(gProtect.m_MainInfo.CustomWingEffectInfo);
+	gCustomWingEffect.Load(gProtect.m_MainInfo.CustomWingEffectInfo); // Load Hieu Ung Tu .TXT
+
+	gDynamicWingEffect.Load(gProtect.m_MainInfo.DynamicWingEffectInfo); // Load Hieu Ung Tu .TXT
 
 	gPacketManager.LoadEncryptionKey("Data\\Enc1.dat");
 
@@ -140,7 +160,16 @@ extern "C" _declspec(dllexport) void EntryProc() // OK
 
 	//InitHackCheck();
 
+	AttachNewEffect();
+
 	InitItem();
+
+	gFog.Load();
+	gFont.Load();
+
+	InitBows();
+
+	InitOGLHook();
 
 	InitJewel();
 
@@ -150,7 +179,31 @@ extern "C" _declspec(dllexport) void EntryProc() // OK
 
 	InitResolution();
 
+	gController.Load();
+
 	InitWing();
+
+	gObjUser.Load();
+
+	WingInvisible();
+
+	WingEffect(); // Hieu Ung Wing/Item Tu WingEffect.cpp
+
+	//gObjCreatePetExHook();
+
+	gChatExpanded.Load();
+
+	gWings.Load();
+
+	gLoadMap.Load();
+
+	Config.Load();
+
+//	InitHackCheck();
+
+	gInterface.Load();
+
+	LoadCustom();
 
 	gProtect.CheckLauncher();
 
@@ -161,14 +214,28 @@ extern "C" _declspec(dllexport) void EntryProc() // OK
 	gProtect.CheckPluginFile();
 
 	gProtect.CheckCameraFile();
+
+
+
+
+	int FogSwitch = GetPrivateProfileIntA("Setting", "Fog", 0, ".\\Settings.ini");
+	if(FogSwitch == 1)
+	gFog.EnableFog = true;
+
+
+
+	int MiniMap = GetPrivateProfileIntA("Setting", "MiniMap", 0, ".\\Settings.ini");
+	if(MiniMap == 1)
+	gInterface.showMiniMap = true;
 }
 
-BOOL APIENTRY DllMain(HANDLE hModule,DWORD ul_reason_for_call,LPVOID lpReserved) // OK
+BOOL APIENTRY DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)
 {
-	switch(ul_reason_for_call)
+	switch(dwReason)
 	{
 		case DLL_PROCESS_ATTACH:
 			hins = (HINSTANCE)hModule;
+			gController.Instance = hModule;
 			break;
 		case DLL_PROCESS_DETACH:
 			break;

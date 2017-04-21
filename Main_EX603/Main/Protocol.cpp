@@ -1,14 +1,13 @@
 #include "stdafx.h"
 #include "Protocol.h"
 #include "Common.h"
-#include "HealthBar.h"
 #include "Offset.h"
 #include "PacketManager.h"
 #include "PrintPlayer.h"
 #include "Protect.h"
 #include "Reconnect.h"
 #include "Util.h"
-
+#include "User.h"
 BOOL ProtocolCoreEx(BYTE head,BYTE* lpMsg,int size,int key) // OK
 {
 	switch(head)
@@ -96,7 +95,7 @@ BOOL ProtocolCoreEx(BYTE head,BYTE* lpMsg,int size,int key) // OK
 					GCNewCharacterCalcRecv((PMSG_NEW_CHARACTER_CALC_RECV*)lpMsg);
 					return 1;
 				case 0xE2:
-					GCNewHealthBarRecv((PMSG_NEW_HEALTH_BAR_RECV*)lpMsg);
+					gObjUser.SetTargetData((PMSG_TARGETDATA_ANS*)lpMsg);
 					return 1;
 				case 0xE3:
 					GCNewGensBattleInfoRecv((PMSG_NEW_GENS_BATTLE_INFO_RECV*)lpMsg);
@@ -266,6 +265,8 @@ void GCCharacterInfoRecv(PMSG_CHARACTER_INFO_RECV* lpMsg) // OK
 	ViewVitality = lpMsg->ViewVitality;
 	ViewEnergy = lpMsg->ViewEnergy;
 	ViewLeadership = lpMsg->ViewLeadership;
+	ViewTitle = lpMsg->ViewTitle;
+	ViewLong = lpMsg->ViewLong;
 
 	*(WORD*)(*(DWORD*)(MAIN_VIEWPORT_STRUCT)+0x07E) = 0;
 
@@ -419,6 +420,8 @@ void GCNewCharacterInfoRecv(PMSG_NEW_CHARACTER_INFO_RECV* lpMsg) // OK
 	ViewVitality = lpMsg->ViewVitality;
 	ViewEnergy = lpMsg->ViewEnergy;
 	ViewLeadership = lpMsg->ViewLeadership;
+	ViewTitle = lpMsg->ViewTitle;
+	ViewLong = lpMsg->ViewLong;
 }
 
 void GCNewCharacterCalcRecv(PMSG_NEW_CHARACTER_CALC_RECV* lpMsg) // OK
@@ -466,19 +469,6 @@ void GCNewCharacterCalcRecv(PMSG_NEW_CHARACTER_CALC_RECV* lpMsg) // OK
 	ViewDarkSpiritAttackSpeed = lpMsg->ViewDarkSpiritAttackSpeed;
 	ViewDarkSpiritAttackSuccessRate = lpMsg->ViewDarkSpiritAttackSuccessRate;
 }
-
-void GCNewHealthBarRecv(PMSG_NEW_HEALTH_BAR_RECV* lpMsg) // OK
-{
-	ClearNewHealthBar();
-
-	for(int n=0;n < lpMsg->count;n++)
-	{
-		PMSG_NEW_HEALTH_RECV* lpInfo = (PMSG_NEW_HEALTH_RECV*)(((BYTE*)lpMsg)+sizeof(PMSG_NEW_HEALTH_BAR_RECV)+(sizeof(PMSG_NEW_HEALTH_RECV)*n));
-
-		InsertNewHealthBar(lpInfo->index,lpInfo->type,lpInfo->rate);
-	}
-}
-
 void GCNewGensBattleInfoRecv(PMSG_NEW_GENS_BATTLE_INFO_RECV* lpMsg) // OK
 {
 	GensBattleMapCount = lpMsg->GensBattleMapCount;

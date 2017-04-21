@@ -1161,6 +1161,9 @@ void GDCharacterInfoRecv(SDHP_CHARACTER_INFO_RECV* lpMsg,int index) // OK
 
 		pMsg.FruitSubPoint = (WORD)gQueryManager.GetAsInteger("FruitSubPoint");
 
+		pMsg.RankTitle = (DWORD)gQueryManager.GetAsInteger("Title");
+		pMsg.Long = (DWORD)gQueryManager.GetAsInteger("Class");
+
 		#if(DATASERVER_UPDATE>=602)
 
 		pMsg.ExtInventory = (BYTE)gQueryManager.GetAsInteger("ExtInventory");
@@ -1623,7 +1626,7 @@ void GDCharacterInfoSaveRecv(SDHP_CHARACTER_INFO_SAVE_RECV* lpMsg) // OK
 	gQueryManager.BindParameterAsBinary(2,lpMsg->Skill[0],sizeof(lpMsg->Skill));
 	gQueryManager.BindParameterAsBinary(3,lpMsg->Quest,sizeof(lpMsg->Quest));
 	gQueryManager.BindParameterAsBinary(4,lpMsg->Effect[0],sizeof(lpMsg->Effect));
-	gQueryManager.ExecQuery("UPDATE Character SET cLevel=%d,Class=%d,LevelUpPoint=%d,Experience=%d,Strength=%d,Dexterity=%d,Vitality=%d,Energy=%d,Leadership=%d,Inventory=?,MagicList=?,Money=%d,Life=%f,MaxLife=%f,Mana=%f,MaxMana=%f,BP=%f,MaxBP=%f,Shield=%f,MaxShield=%f,MapNumber=%d,MapPosX=%d,MapPosY=%d,MapDir=%d,PkCount=%d,PkLevel=%d,PkTime=%d,Quest=?,EffectList=?,FruitAddPoint=%d,FruitSubPoint=%d,ExtInventory=%d WHERE AccountID='%s' AND Name='%s'",lpMsg->Level,lpMsg->Class,lpMsg->LevelUpPoint,lpMsg->Experience,lpMsg->Strength,lpMsg->Dexterity,lpMsg->Vitality,lpMsg->Energy,lpMsg->Leadership,lpMsg->Money,(float)lpMsg->Life,(float)lpMsg->MaxLife,(float)lpMsg->Mana,(float)lpMsg->MaxMana,(float)lpMsg->BP,(float)lpMsg->MaxBP,(float)lpMsg->Shield,(float)lpMsg->MaxShield,lpMsg->Map,lpMsg->X,lpMsg->Y,lpMsg->Dir,lpMsg->PKCount,lpMsg->PKLevel,lpMsg->PKTime,lpMsg->FruitAddPoint,lpMsg->FruitSubPoint,lpMsg->ExtInventory,lpMsg->account,lpMsg->name);
+	gQueryManager.ExecQuery("UPDATE Character SET cLevel=%d,Class=%d,LevelUpPoint=%d,Experience=%d,Strength=%d,Dexterity=%d,Vitality=%d,Energy=%d,Leadership=%d,Inventory=?,MagicList=?,Money=%d,Life=%f,MaxLife=%f,Mana=%f,MaxMana=%f,BP=%f,MaxBP=%f,Shield=%f,MaxShield=%f,MapNumber=%d,MapPosX=%d,MapPosY=%d,MapDir=%d,PkCount=%d,PkLevel=%d,PkTime=%d,Quest=?,EffectList=?,FruitAddPoint=%d,FruitSubPoint=%d,ExtInventory=%d,Title=%d WHERE AccountID='%s' AND Name='%s'",lpMsg->Level,lpMsg->Class,lpMsg->LevelUpPoint,lpMsg->Experience,lpMsg->Strength,lpMsg->Dexterity,lpMsg->Vitality,lpMsg->Energy,lpMsg->Leadership,lpMsg->Money,(float)lpMsg->Life,(float)lpMsg->MaxLife,(float)lpMsg->Mana,(float)lpMsg->MaxMana,(float)lpMsg->BP,(float)lpMsg->MaxBP,(float)lpMsg->Shield,(float)lpMsg->MaxShield,lpMsg->Map,lpMsg->X,lpMsg->Y,lpMsg->Dir,lpMsg->PKCount,lpMsg->PKLevel,lpMsg->PKTime,lpMsg->FruitAddPoint,lpMsg->FruitSubPoint,lpMsg->ExtInventory,lpMsg->RankTitle,lpMsg->account,lpMsg->name);
 	gQueryManager.Close();
 
 	#else

@@ -426,6 +426,17 @@ struct VIEWPORT_STRUCT
 	BYTE state;
 	shrt index;
 	BYTE type;
+	//short number;
+	#pragma pack()
+};
+
+struct VIEWPORT_PLAYER_STRUCT
+{
+	#pragma pack(1)
+	BYTE state;
+	shrt index;
+	BYTE type;
+	//short number;
 	#pragma pack()
 };
 
@@ -630,7 +641,7 @@ struct OBJECTSTRUCT
 	BYTE Resistance[MAX_RESISTANCE_TYPE];
 	BYTE AddResistance[MAX_RESISTANCE_TYPE];
 	VIEWPORT_STRUCT* VpPlayer;
-	VIEWPORT_STRUCT* VpPlayer2;
+	VIEWPORT_PLAYER_STRUCT* VpPlayer2;
 	VIEWPORT_STRUCT* VpPlayerItem;
 	int VPCount;
 	int VPCount2;
@@ -779,6 +790,8 @@ struct OBJECTSTRUCT
 	DWORD CashShopGoblinPointTime;
 	int Reset;
 	int MasterReset;
+	int RankTitle;
+	int RankLong;
 	int ChangeSkin;
 	int LoadQuestWorld;
 	struct QUEST_WORLD_LIST* QuestWorldList;

@@ -59,6 +59,8 @@ enum eChaosMixNumber
 	CHAOS_MIX_LUCKY_ITEM_REFINE = 52,
 	CHAOS_MIX_MONSTER_WING = 56,
 	CHAOS_MIX_SOCKET_WEAPON = 57,
+	CHAOS_MIX_EX802_WING = 58,
+	CHAOS_MIX_WING5 = 59,
 };
 
 //**********************************************//
@@ -122,6 +124,7 @@ public:
 	void IllusionTempleMix(LPOBJ lpObj);
 	void FeatherOfCondorMix(LPOBJ lpObj);
 	void Wing3Mix(LPOBJ lpObj);
+	void Wing4Mix(LPOBJ lpObj);
 	void ChaosCardMix(LPOBJ lpObj,int type);
 	void CherryBlossomMix(LPOBJ lpObj,int type);
 	void SocketItemCreateSeedMix(LPOBJ lpObj);
@@ -134,6 +137,7 @@ public:
 	void LuckyItemCreateMix(LPOBJ lpObj);
 	void LuckyItemRefineMix(LPOBJ lpObj);
 	void MonsterWingMix(LPOBJ lpObj);
+	void eX802WingMix(LPOBJ lpObj);
 	void SocketWeaponMix(LPOBJ lpObj);
 	void PentagramMithrilMix(LPOBJ lpObj);
 	void PentagramElixirMix(LPOBJ lpObj);

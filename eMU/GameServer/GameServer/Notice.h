@@ -24,6 +24,12 @@ struct PMSG_NOTICE_SEND
 	char message[256];
 };
 
+struct PMSG_WELCOME_SEND
+{
+	PBMSG_HEAD header; // C1:00
+	char text[10];
+	char message[60];
+};
 //**********************************************//
 //**********************************************//
 //**********************************************//
@@ -49,6 +55,7 @@ public:
 	void SetInfo(NOTICE_INFO info);
 	void MainProc();
 	void GCNoticeSend(int aIndex,BYTE type,BYTE count,BYTE opacity,WORD delay,DWORD color,BYTE speed,char* message,...);
+	void GCWelcomeSend(int aIndex,char* message,char* text);
 	void GCNoticeSendToAll(BYTE type,BYTE count,BYTE opacity,WORD delay,DWORD color,BYTE speed,char* message,...);
 private:
 	NOTICE_INFO m_NoticeInfo[MAX_NOTICE];

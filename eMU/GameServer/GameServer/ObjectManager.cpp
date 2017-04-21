@@ -1097,6 +1097,10 @@ bool CObjectManager::CharacterGetRespawnLocation(LPOBJ lpObj) // OK
 	{
 		result = gGate.GetGate(335,&gate,&map,&x,&y,&dir,&level);
 	}
+	else if(lpObj->Map == MAP_ARKAINA)
+	{
+		result = gGate.GetGate(345,&gate,&map,&x,&y,&dir,&level);
+	}
 	else if(lpObj->Map == MAP_ACHERON1)
 	{
 		result = gGate.GetGate(417,&gate,&map,&x,&y,&dir,&level);
@@ -1453,7 +1457,7 @@ bool CObjectManager::CharacterLevelUp(LPOBJ lpObj,DWORD AddExperience,int MaxLev
 
 			lpObj->LevelUpPoint += gServerInfo.m_LevelUpPoint[lpObj->Class];
 
-			lpObj->LevelUpPoint += ((lpObj->Level>1) ? ((gQuest.CheckQuestListState(lpObj, 2, QUEST_FINISH) == 0) ? 0 : gServerInfo.m_PlusStatPoint) : 0);
+			lpObj->LevelUpPoint += ((lpObj->Level>220)?((gQuest.CheckQuestListState(lpObj,2,QUEST_FINISH)==0)?0:gServerInfo.m_PlusStatPoint):0);
 
 			AddExperience -= (((--MaxLevelUp)==0)?AddExperience:(lpObj->NextExperience-lpObj->Experience));
 
@@ -1813,7 +1817,7 @@ void CObjectManager::CharacterMakePreviewCharSet(int aIndex) // OK
 	else if(gCustomWing.CheckCustomWingByItem(GET_ITEM(12,TempInventory[7])) != 0)
 	{
 		lpObj->CharSet[5] |= 12;
-		lpObj->CharSet[17] |= (gCustomWing.GetCustomWingIndex(GET_ITEM(12,TempInventory[7]))+1) << 1;
+		lpObj->CharSet[17] |= (gCustomWing.GetCustomWingIndex(GET_ITEM(12,TempInventory[7]))+1) << 2;
 	}
 
 	#else
@@ -1896,15 +1900,18 @@ void CObjectManager::CharacterMakePreviewCharSet(int aIndex) // OK
 
 		if((lpObj->Inventory[8].m_NewOption & 1) != 0)
 		{
-			lpObj->CharSet[16] |= 1;
+			lpObj->CharSet[17] |= 0x00;
+			lpObj->CharSet[16] |= 0x01;
 		}
 		else if((lpObj->Inventory[8].m_NewOption & 2) != 0)
 		{
-			lpObj->CharSet[16] |= 2;
+			lpObj->CharSet[17] |= 0x00;
+			lpObj->CharSet[16] |= 0x02;
 		}
 		else if((lpObj->Inventory[8].m_NewOption & 4) != 0)
 		{
-			lpObj->CharSet[17] |= 1;
+			lpObj->CharSet[17] |= 0x00;
+			lpObj->CharSet[16] |= 0x03;
 		}
 	}
 	else if(TempInventory[8] == 64 || TempInventory[8] == 65 || TempInventory[8] == 67)
@@ -2292,18 +2299,6 @@ bool CObjectManager::CharacterUseJewelOfBles(LPOBJ lpObj,int SourceSlot,int Targ
 	}
 
 	CItem* lpItem = &lpObj->Inventory[TargetSlot];
-
-
-	if (lpItem->m_Index == GET_ITEM(4, 15)) // Disable Arrow
-	{
-		return 0;
-	}
-
-
-	if (lpItem->m_Index == GET_ITEM(4, 7)) // Disable Bolt
-	{
-		return 0;
-	}
 
 	if(lpObj->Inventory[SourceSlot].m_Index == GET_ITEM(12,30) && lpItem->m_Index != GET_ITEM(0,41))
 	{
@@ -4104,6 +4099,8 @@ bool CObjectManager::CharacterInfoSet(BYTE* aRecv,int aIndex) // OK
 	#endif
 	lpObj->Reset = lpMsg->Reset;
 	lpObj->MasterReset = lpMsg->MasterReset;
+	lpObj->RankTitle = lpMsg->RankTitle;
+	lpObj->RankLong = lpMsg->RankLong;
 	#if(GAMESERVER_UPDATE>=801)
 	lpObj->UseGuildMatching = lpMsg->UseGuildMatching;
 	lpObj->UseGuildMatchingJoin = lpMsg->UseGuildMatchingJoin;

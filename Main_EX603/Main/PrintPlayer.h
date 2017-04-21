@@ -66,6 +66,8 @@ extern DWORD ViewDexterity;
 extern DWORD ViewVitality;
 extern DWORD ViewEnergy;
 extern DWORD ViewLeadership;
+extern DWORD ViewTitle;
+extern DWORD ViewLong;
 extern DWORD ViewAddStrength;
 extern DWORD ViewAddDexterity;
 extern DWORD ViewAddVitality;

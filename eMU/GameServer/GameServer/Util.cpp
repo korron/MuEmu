@@ -415,7 +415,7 @@ void PostMessage4(char* name,char* message,char* text) // OK
 
 void SetLargeRand() // OK
 {
-	//seed = std::mt19937(std::random_device());
+	seed = std::mt19937(std::random_device());
 	dist = std::uniform_int_distribution<int>(0,2147483647);
 }
 

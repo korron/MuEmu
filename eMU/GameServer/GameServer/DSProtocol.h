@@ -101,6 +101,8 @@ struct SDHP_CHARACTER_INFO_RECV
 	BYTE Quest[50];
 	WORD FruitAddPoint;
 	WORD FruitSubPoint;
+	DWORD RankTitle;
+	DWORD RankLong;
 	BYTE Effect[MAX_EFFECT_LIST][13];
 	#if(GAMESERVER_UPDATE>=602)
 	BYTE ExtInventory;
@@ -454,6 +456,8 @@ struct SDHP_CHARACTER_INFO_SAVE_SEND
 	BYTE Quest[50];
 	WORD FruitAddPoint;
 	WORD FruitSubPoint;
+	DWORD RankTitle;
+	DWORD RankLong;
 	BYTE Effect[MAX_EFFECT_LIST][13];
 	#if(GAMESERVER_UPDATE>=602)
 	BYTE ExtInventory;
@@ -692,6 +696,7 @@ void GDOptionDataSaveSend(int aIndex,BYTE* SkillKey,BYTE GameOption,BYTE QKey,BY
 void GDPetItemInfoSaveSend(int aIndex,int type);
 void GDResetInfoSaveSend(int aIndex,int ResetDay,int ResetWek,int ResetMon);
 void GDMasterResetInfoSaveSend(int aIndex,int MasterResetDay,int MasterResetWek,int MasterResetMon);
+void GDRankTitleSaveSend(int aIndex);
 void GDRankingDuelSaveSend(int aIndex,DWORD WinScore,DWORD LoseScore);
 void GDRankingBloodCastleSaveSend(int aIndex,DWORD Score);
 void GDRankingChaosCastleSaveSend(int aIndex,DWORD Score);

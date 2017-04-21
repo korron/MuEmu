@@ -79,7 +79,7 @@ void CMemoryAllocatorInfo::Alloc() // OK
 	this->m_SkillBackup = new CSkill[MAX_SKILL_LIST];
 	this->m_Skill = new CSkill[MAX_SKILL_LIST];
 	this->m_VpPlayer = new VIEWPORT_STRUCT[MAX_VIEWPORT];
-	this->m_VpPlayer2 = new VIEWPORT_STRUCT[MAX_VIEWPORT];
+	this->m_VpPlayer2 = new VIEWPORT_PLAYER_STRUCT[MAX_VIEWPORT];
 	this->m_VpPlayerItem = new VIEWPORT_STRUCT[MAX_VIEWPORT];
 	this->m_HitDamage = new HIT_DAMAGE_STRUCT[MAX_HIT_DAMAGE];
 	this->m_Effect = new CEffect[MAX_EFFECT_LIST];

@@ -103,6 +103,8 @@ void GJConnectAccountRecv(SDHP_CONNECT_ACCOUNT_RECV* lpMsg,int index) // OK
 		MAX_ACCOUNT
 #endif
 		)
+
+	if(gAccountManager.GetAccountCount() >= gJoinServerMaxAccount[gProtect.m_AuthInfo.PackageType][gProtect.m_AuthInfo.PlanType])
 	{
 		pMsg.result = 4;
 		gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);

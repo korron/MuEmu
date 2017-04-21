@@ -54,7 +54,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine
 
 	char buff[256];
 
-	wsprintf(buff,"[%s] MuEMU ConnectServer (QueueSize : %d)",CONNECTSERVER_VERSION,0);
+	wsprintf(buff,"ConnectServer (QueueSize : %d)",0);
 
 	SetWindowText(hWnd,buff);
 

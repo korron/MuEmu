@@ -33,6 +33,7 @@ public:
 	void ReadSkillInfo();
 	void ReadUtilInfo();
 	void ReloadMonsterInfo();
+	void LoadPetConfig();
 	void ReadStartupInfo(char* section,char* path);
 	void ReadCashShopInfo(char* section,char* path);
 	void ReadChaosMixInfo(char* section,char* path);
@@ -321,6 +322,7 @@ public:
 	int m_IllusionTempleMixRate6[MAX_ACCOUNT_LEVEL];
 	int m_FeatherOfCondorMixRate[MAX_ACCOUNT_LEVEL];
 	int m_Wing3MixRate[MAX_ACCOUNT_LEVEL];
+	int m_Wing4MixRate[MAX_ACCOUNT_LEVEL];
 	int m_SocketItemCreateSeedMixRate[MAX_ACCOUNT_LEVEL];
 	int m_SocketItemCreateSeedSphereMixRate[MAX_ACCOUNT_LEVEL];
 	int m_SummonScrollMixRate1[MAX_ACCOUNT_LEVEL];
@@ -329,6 +331,7 @@ public:
 	int m_LuckyItemRefineMixRate1[MAX_ACCOUNT_LEVEL];
 	int m_LuckyItemRefineMixRate2[MAX_ACCOUNT_LEVEL];
 	int m_MonsterWingMixRate[MAX_ACCOUNT_LEVEL];
+	int m_eX802WingMixRate[MAX_ACCOUNT_LEVEL];
 	int m_SocketWeaponMixRate[MAX_ACCOUNT_LEVEL];
 	int m_PentagramMithrilMixRate[MAX_ACCOUNT_LEVEL];
 	int m_PentagramElixirMixRate[MAX_ACCOUNT_LEVEL];
@@ -855,6 +858,21 @@ public:
 	int m_BloodHowlingTimeConstA;
 	long m_AnnounceChaosMix;
 	char m_AnnounceChaosMixText[50];
+	short NewPetAddFinalDamageRate;
+
+	short WhiteTigerStunRate;
+	short WhiteTigerStunTime;
+	short WhiteTigerCriticalRate;
+	short WhiteTigerMissRate;
+
+	short HullWolfFrozeRate;
+	short HullWolfFrozeTime;
+	short HullWolfExcDamageRate;
+	short HullWolfAddDefense;
+
+	short BeastIgnoreSDRate;
+	short BeastExcDamageRate;
+	short BeastCriticalRate;
 };
 
 extern CServerInfo gServerInfo;

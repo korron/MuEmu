@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -20,14 +20,12 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -52,6 +50,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;MAIN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -62,7 +61,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -72,68 +71,129 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;cg.lib;cgGL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="AddressTable1.bin" />
     <None Include="AddressTable2.bin" />
     <None Include="AddressTable3.bin" />
+    <None Include="icon1.ico" />
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Util\CCRC32.H" />
+    <ClInclude Include="allocator.h" />
+    <ClInclude Include="array.h" />
+    <ClInclude Include="base.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="ChatExpanded.h" />
     <ClInclude Include="Common.h" />
+    <ClInclude Include="Controller.h" />
+    <ClInclude Include="CustomBow.h" />
     <ClInclude Include="CustomItem.h" />
     <ClInclude Include="CustomJewel.h" />
     <ClInclude Include="CustomMessage.h" />
     <ClInclude Include="CustomWing.h" />
-    <ClInclude Include="CustomWingEffect.h" />
+    <ClInclude Include="NewFont.h" />
+    <ClInclude Include="NewMap.h" />
+    <ClInclude Include="Config.h" />
+    <ClInclude Include="Skybox.h" />
+    <ClInclude Include="StaticEffect.h" />
+    <ClInclude Include="Defines.h" />
+    <ClInclude Include="DynamicEffect.h" />
+    <ClInclude Include="Fog.h" />
+    <ClInclude Include="Glow.h" />
+    <ClInclude Include="Graphics.h" />
     <ClInclude Include="HackCheck.h" />
-    <ClInclude Include="HealthBar.h" />
+    <ClInclude Include="Import.h" />
+    <ClInclude Include="Interface.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Main.h" />
+    <ClInclude Include="Object.h" />
     <ClInclude Include="Offset.h" />
+    <ClInclude Include="Other.h" />
     <ClInclude Include="PacketManager.h" />
+    <ClInclude Include="PetHook.h" />
     <ClInclude Include="PrintPlayer.h" />
     <ClInclude Include="Protect.h" />
     <ClInclude Include="Protocol.h" />
+    <ClInclude Include="ReadScript.h" />
     <ClInclude Include="Reconnect.h" />
     <ClInclude Include="Resolution.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SmokeEffect.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TMemory.h" />
+    <ClInclude Include="ToolKit.h" />
+    <ClInclude Include="TrayMode.h" />
+    <ClInclude Include="User.h" />
     <ClInclude Include="Util.h" />
+    <ClInclude Include="WingBright.h" />
+    <ClInclude Include="WingEffect.h" />
+    <ClInclude Include="WingInvisible.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Util\CCRC32.Cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="ChatExpanded.cpp" />
     <ClCompile Include="Common.cpp" />
+    <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="CustomBow.cpp" />
     <ClCompile Include="CustomItem.cpp" />
     <ClCompile Include="CustomJewel.cpp" />
     <ClCompile Include="CustomMessage.cpp" />
     <ClCompile Include="CustomWing.cpp" />
-    <ClCompile Include="CustomWingEffect.cpp" />
+    <ClCompile Include="NewFont.cpp" />
+    <ClCompile Include="NewMap.cpp" />
+    <ClCompile Include="Config.cpp" />
+    <ClCompile Include="Skybox.cpp" />
+    <ClCompile Include="StaticEffect.cpp" />
+    <ClCompile Include="DynamicEffect.cpp" />
+    <ClCompile Include="Fog.cpp" />
+    <ClCompile Include="Glow.cpp" />
+    <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="HackCheck.cpp" />
-    <ClCompile Include="HealthBar.cpp" />
+    <ClCompile Include="Interface.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Other.cpp" />
     <ClCompile Include="PacketManager.cpp" />
+    <ClCompile Include="PetHook.cpp" />
     <ClCompile Include="PrintPlayer.cpp" />
     <ClCompile Include="Protect.cpp" />
     <ClCompile Include="Protocol.cpp" />
     <ClCompile Include="Reconnect.cpp" />
     <ClCompile Include="Resolution.cpp" />
+    <ClCompile Include="SmokeEffect.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TMemory.cpp" />
+    <ClCompile Include="ToolKit.cpp" />
+    <ClCompile Include="TrayMode.cpp" />
+    <ClCompile Include="User.cpp" />
     <ClCompile Include="Util.cpp" />
+    <ClCompile Include="WingBright.cpp" />
+    <ClCompile Include="WingEffect.cpp" />
+    <ClCompile Include="WingInvisible.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Main.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
